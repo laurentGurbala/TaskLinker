@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -39,6 +41,17 @@ class Employee
     #[Assert\NotBlank(message: "La date d'entrée est obligatoire.")]
     #[Assert\LessThanOrEqual("today", message: "La date d'entrée ne peut pas être dans le futur.")]
     private ?\DateTimeImmutable $startDate = null;
+
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'members')]
+    private Collection $projects;
+
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -111,5 +124,32 @@ class Employee
         $lastName = $this->lastName ? mb_substr($this->lastName, 0, 1, "UTF-8") : "";
 
         return strtoupper($firstName . $lastName);
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->addMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            $project->removeMember($this);
+        }
+
+        return $this;
     }
 }
