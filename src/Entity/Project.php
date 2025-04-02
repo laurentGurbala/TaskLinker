@@ -30,6 +30,9 @@ class Project
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'project', orphanRemoval: true)]
     private Collection $tasks;
 
+    #[ORM\Column]
+    private ?bool $isArchived = null;
+
     public function __construct()
     {
         $this->members = new ArrayCollection();
@@ -103,6 +106,18 @@ class Project
                 $task->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isArchived(): ?bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(bool $isArchived): static
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }

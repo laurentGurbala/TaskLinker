@@ -40,4 +40,14 @@ class ProjectRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * Récupère les projets actifs
+     */
+    public function findActiveProjects(): array {
+        return $this->createQueryBuilder("p")
+        ->where("p.isArchived = false")
+        ->getQuery()
+        ->getResult();
+    }
 }

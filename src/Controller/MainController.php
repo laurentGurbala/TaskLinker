@@ -13,7 +13,7 @@ final class MainController extends AbstractController
     public function index(ProjectRepository $repository): Response
     {
         // Récupère les projets
-        $projects = $repository->findAll();
+        $projects = $repository->findActiveProjects();
 
         // Affiche la page d'acceuil avec la liste des projets
         return $this->render('main/index.html.twig', [

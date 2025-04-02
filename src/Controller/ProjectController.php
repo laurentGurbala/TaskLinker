@@ -30,8 +30,9 @@ final class ProjectController extends AbstractController
             $entityManager->flush();
 
             // Redirige l'utilisateur vers la liste des projets
-            // todo : rediriger vers le détail du projet
-            return $this->redirectToRoute("app_main");
+            return $this->redirectToRoute("app_project_show", [
+                "id" => $project->getId()
+            ]);
         }
 
         // Affiche le formulaire de création d'un projet
