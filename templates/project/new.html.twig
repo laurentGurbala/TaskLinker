@@ -2,7 +2,7 @@
 
 {% block title %}Nouveau projet{% endblock %}
 
-{% block header %}<h1>Nouveau projet</h1>{% endblock %}
+{% block header %}<h1>{{ isEdit ? 'Modifier le projet' : 'Nouveau projet' }}</h1>{% endblock %}
 
 {% block body %}
     <div id="projects-container">
@@ -15,7 +15,7 @@
         <div>
             {{ form_row(form.members, {label: "Inviter des membres" }) }}
         </div>
-        <button type="submit" class="button button-submit">Continuer</button>
+        <button type="submit" class="button button-submit">{{ isEdit ? 'Enregistrer' : 'Continuer' }}</button>
         {{ form_end(form) }}
 
     </div>

@@ -14,10 +14,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProjectController extends AbstractController
 {
     #[Route('', name: 'app_project_new', methods: ["GET", "POST"])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route("/{id}/edit", name: "app_project_edit", methods: ["GET", "POST"], requirements: ["id" => "\d+"])]
+    public function new(?Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Crée un projet vide
-        $project = new Project();
+        // Si le projet est null, on en crée un
+        $project ??= new Project();
 
         // Crée le formulaire
         $form = $this->createForm(ProjectType::class, $project);
@@ -38,10 +39,11 @@ final class ProjectController extends AbstractController
         // Affiche le formulaire de création d'un projet
         return $this->render('project/new.html.twig', [
             "form" => $form,
+            "isEdit" => $project->getId() !== null,
         ]);
     }
 
-    #[ROUTE("/{id}", name: "app_project_show", methods: ["GET"])]
+    #[ROUTE("/{id}", name: "app_project_show", methods: ["GET"], requirements: ["id" => "\d+"])]
     public function show(?Project $project): Response {
         // Si aucun projet n'a été trouvé...
         if ($project == null) {
@@ -53,5 +55,18 @@ final class ProjectController extends AbstractController
         return $this->render("project/show.html.twig", [
             "project" => $project
         ]);
+    }
+
+    #[Route("/{id}/archive", name: "app_project_archive", methods: ["GET"], requirements: ["id" => "\d+"])]
+    public function archive(?Project $project, EntityManagerInterface $entityManager): Response {
+        // Archive le projet
+        if ($project != null) {  
+            $project->setIsArchived(true);
+            $entityManager->persist($project);
+            $entityManager->flush();
+        }
+
+        // Redirige vers la page principale
+        return $this->redirectToRoute("app_main");
     }
 }
