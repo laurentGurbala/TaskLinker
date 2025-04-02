@@ -39,4 +39,18 @@ final class ProjectController extends AbstractController
             "form" => $form,
         ]);
     }
+
+    #[ROUTE("/{id}", name: "app_project_show", methods: ["GET"])]
+    public function show(?Project $project): Response {
+        // Si aucun projet n'a été trouvé...
+        if ($project == null) {
+            // Redirige vers la page principale
+            return $this->redirectToRoute("app_main");
+        }
+
+        // Affiche le détail d'un projet
+        return $this->render("project/show.html.twig", [
+            "project" => $project
+        ]);
+    }
 }
