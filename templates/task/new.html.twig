@@ -26,7 +26,7 @@
     </div>
     <button type="submit" class="button button-submit">{{ isEdit ? "Modifier" : "Ajouter" }}</button>
     {% if isEdit %}
-        <a href="#" class="delete-task">Supprimer la tâche</a>    
+        <a href="{{ path("app_task_remove", {id: project.id, taskId: task.id}) }}" class="delete-task">Supprimer la tâche</a>    
     {% endif %}
     {{ form_end(form) }}
     
