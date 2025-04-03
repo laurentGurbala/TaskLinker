@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\Task;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TaskController extends AbstractController
 {
     #[Route('/project/{id}/task/new', name: 'app_task_new', methods: ["GET", "POST"])]
-    public function new(?Project $project, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/project/{id}/task/{taskId}/edit', name: 'app_task_edit', methods: ["GET", "POST"])]
+    public function new(Project $project, Request $request, EntityManagerInterface $entityManager, 
+        TaskRepository $taskRepository, ?int $taskId = null): Response
     {
         // Si le projet n'est pas trouvé...
         if ($project == null) {
@@ -22,11 +25,13 @@ final class TaskController extends AbstractController
             return $this->redirectToRoute("app_main");
         }
 
-        // Si la tâche est null, on en crée une
-        $task ??= new Task();
+        // Si on est en mode édition, on récupère la tâche
+        $task = $taskId ? $taskRepository->find($taskId) : new Task();
 
-        // Assigne le projet
-        $task->setProject($project);
+        // Assigne le projet (uniquement en mode création)
+        if (!$taskId) {
+            $task->setProject($project);
+        }
 
         // Crée le formulaire
         $form = $this->createForm(TaskType::class, $task, [
@@ -50,6 +55,7 @@ final class TaskController extends AbstractController
         return $this->render('task/new.html.twig', [
             'form' => $form,
             "project" => $project,
+            "isEdit" => $task->getId() !== null,
         ]);
     }
 }

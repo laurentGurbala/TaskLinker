@@ -33,7 +33,7 @@ class Task
     private ?TaskStatus $status = TaskStatus::TODO;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
-    private ?employee $member = null;
+    private ?Employee $member = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]

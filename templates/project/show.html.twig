@@ -22,7 +22,7 @@
             <div class="tasks-list">
                 {% for task in project.tasks %}
                     {% if task.status.value == "Todo" %}
-                        <a class="task" href="#">
+                        <a class="task" href="{{ path("app_task_edit", {id: project.id, taskId: task.id}) }}">
                             <h3>{{ task.title }}</h3>
                             <p>{{ task.description is not null ? task.description : "" }}</p>
                             <div class="task-infos">
@@ -48,16 +48,18 @@
             <div class="tasks-list">
                 {% for task in project.tasks %}
                     {% if task.status.value == "Doing" %}
-                        <a class="task" href="#">
+                        <a class="task" href="{{ path("app_task_edit", {id: project.id, taskId: task.id}) }}">
                             <h3>{{ task.title }}</h3>
                             <p>{{ task.description is not null ? task.description : "" }}</p>
                             <div class="task-infos">
                                 <div class="task-deadline">
                                     <i class="fa-regular fa-calendar"></i> {{ task.deadline ? task.deadline|date('d/m/Y') : '-'  }}
                                 </div>
-                                <div class="mini-user">
-                                    {{ task.member.getInitials() ?? "" }}
-                                </div>
+                                {% if task.member is not null %}
+                                    <div class="mini-user">
+                                        {{ task.member.getInitials()}}
+                                    </div>
+                                {% endif %}
                             </div>
                         </a>
                     {% endif %}
@@ -72,16 +74,18 @@
             <div class="tasks-list">
                 {% for task in project.tasks %}
                     {% if task.status.value == "Done" %}
-                        <a class="task" href="#">
+                        <a class="task" href="{{ path("app_task_edit", {id: project.id, taskId: task.id}) }}">
                             <h3>{{ task.title }}</h3>
                             <p>{{ task.description is not null ? task.description : "" }}</p>
                             <div class="task-infos">
                                 <div class="task-deadline">
                                     <i class="fa-regular fa-calendar"></i> {{ task.deadline ? task.deadline|date('d/m/Y') : '-'  }}
                                 </div>
-                                <div class="mini-user">
-                                    {{ task.member.getInitials() ?? "" }}
-                                </div>
+                                {% if task.member is not null %}
+                                    <div class="mini-user">
+                                        {{ task.member.getInitials()}}
+                                    </div>
+                                {% endif %}
                             </div>
                         </a>
                     {% endif %}
