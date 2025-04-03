@@ -6,6 +6,7 @@ use App\Entity\Employee;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,5 +52,30 @@ final class EmployeeController extends AbstractController
             "form" => $form,
             "employee" => $employee
         ]);
+    }
+
+    #[Route("/team/{id}/remove", name: "app_employee_remove", methods: ["GET"], requirements: ["id" => "\d+"])]
+    public function remove(?Employee $employee, EntityManagerInterface $entityManager) : Response {
+        // Si l'employé existe...
+        if ($employee != null) {
+            // Dissocier l'employé des tâches
+            foreach($employee->getTasks() as $task) {
+                $task->setMember(null);
+                $entityManager->persist($task);
+            }
+
+            // Dissocier l'employé des projets
+            foreach ($employee->getProjects() as $project) {
+                $project->removeMember($employee);
+                $entityManager->persist($project);
+            }
+
+            // Supprimer l'employé
+            $entityManager->remove($employee);
+            $entityManager->flush();
+        }
+
+        // Redirige vers la page des employés
+        return $this->redirectToRoute("app_employee_index");
     }
 }
