@@ -29,14 +29,16 @@
                                 <div class="task-deadline">
                                     <i class="fa-regular fa-calendar"></i> {{ task.deadline ? task.deadline|date('d/m/Y') : '-'  }}
                                 </div>
-                                <div class="mini-user">
-                                    {{ task.member.getInitials() ?? "" }}
-                                </div>
+                                {% if task.member is not null %}
+                                    <div class="mini-user">
+                                        {{ task.member.getInitials()}}
+                                    </div>
+                                {% endif %}
                             </div>
                         </a>
                     {% endif %}
                 {% endfor %}
-                <a href="#" class="task-add">+ Ajouter une tâche</a>
+                <a href="{{ path("app_task_new", {id: project.id}) }}" class="task-add">+ Ajouter une tâche</a>
             </div>
         </div>
 
@@ -60,7 +62,7 @@
                         </a>
                     {% endif %}
                 {% endfor %}
-                <a href="#" class="task-add">+ Ajouter une tâche</a>
+                <a href="{{ path("app_task_new", {id: project.id}) }}" class="task-add">+ Ajouter une tâche</a>
             </div>
         </div>
 
@@ -84,7 +86,7 @@
                         </a>
                     {% endif %}
                 {% endfor %}
-                <a href="#" class="task-add">+ Ajouter une tâche</a>
+                <a href="{{ path("app_task_new", {id: project.id}) }}" class="task-add">+ Ajouter une tâche</a>
             </div>
         </div>
     </div>

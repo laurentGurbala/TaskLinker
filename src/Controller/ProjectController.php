@@ -20,6 +20,9 @@ final class ProjectController extends AbstractController
         // Si le projet est null, on en crée un
         $project ??= new Project();
 
+        // Défini le projet comme actif
+        $project->setIsArchived(false);
+
         // Crée le formulaire
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);

@@ -31,6 +31,7 @@ final class ProjectFactory extends PersistentProxyObjectFactory
     {
         return [
             'name' => self::faker()->company(),
+            "isArchived" => false,
         ];
     }
 
