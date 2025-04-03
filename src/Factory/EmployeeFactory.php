@@ -29,10 +29,12 @@ final class EmployeeFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $name = self::faker()->lastName();
+
         return [
             'firstName' => self::faker()->firstName(),
-            'lastName' => self::faker()->lastName(),
-            'email' => strtolower(self::faker()->lastName()) . '@test.fr',
+            'lastName' => $name,
+            'email' => strtolower($name) . '@test.fr',
             'status' => self::faker()->randomElement(["CDI", "CDD", "Freelance"]),
             'startDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
