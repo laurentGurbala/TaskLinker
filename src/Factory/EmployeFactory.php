@@ -2,24 +2,26 @@
 
 namespace App\Factory;
 
-use App\Entity\Employee;
+use App\Entity\Employe;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<Employee>
+ * @extends PersistentProxyObjectFactory<Employe>
  */
-final class EmployeeFactory extends PersistentProxyObjectFactory
+final class EmployeFactory extends PersistentProxyObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public static function class(): string
     {
-        return Employee::class;
+        return Employe::class;
     }
 
     /**
@@ -35,6 +37,8 @@ final class EmployeeFactory extends PersistentProxyObjectFactory
             'firstName' => self::faker()->firstName(),
             'lastName' => $name,
             'email' => strtolower($name) . '@test.fr',
+            'password' => "test123",
+            'roles' => [],
             'status' => self::faker()->randomElement(["CDI", "CDD", "Freelance"]),
             'startDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
@@ -46,7 +50,7 @@ final class EmployeeFactory extends PersistentProxyObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Employee $employee): void {})
+            // ->afterInstantiate(function(Employe $employe): void {})
         ;
     }
 }

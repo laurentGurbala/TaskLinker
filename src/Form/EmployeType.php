@@ -2,15 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\Employee;
+use App\Entity\Employe;
 use App\Entity\Project;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EmployeeType extends AbstractType
+class EmployeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -19,15 +18,23 @@ class EmployeeType extends AbstractType
             ->add('lastName')
             ->add('email')
             ->add('status')
-            ->add('startDate', DateType::class, [
+            ->add('startDate', null, [
                 'widget' => 'single_text',
-            ]);
+            ])
+            ->add('roles')
+            ->add('password')
+            ->add('projects', EntityType::class, [
+                'class' => Project::class,
+                'choice_label' => 'id',
+                'multiple' => true,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Employee::class,
+            'data_class' => Employe::class,
         ]);
     }
 }

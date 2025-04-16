@@ -6,7 +6,6 @@ use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\This;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -22,7 +21,7 @@ class Project
     /**
      * @var Collection<int, Employee>
      */
-    #[ORM\ManyToMany(targetEntity: Employee::class, inversedBy: 'projects')]
+    #[ORM\ManyToMany(targetEntity: Employe::class, inversedBy: 'projects')]
     private Collection $members;
 
     /**
@@ -66,7 +65,7 @@ class Project
         return $this->members;
     }
 
-    public function addMember(Employee $member): static
+    public function addMember(Employe $member): static
     {
         if (!$this->members->contains($member)) {
             $this->members->add($member);
@@ -75,7 +74,7 @@ class Project
         return $this;
     }
 
-    public function removeMember(Employee $member): static
+    public function removeMember(Employe $member): static
     {
         $this->members->removeElement($member);
 

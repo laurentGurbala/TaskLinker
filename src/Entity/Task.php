@@ -33,7 +33,7 @@ class Task
     private ?TaskStatus $status = TaskStatus::TODO;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
-    private ?Employee $member = null;
+    private ?Employe $member = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -92,12 +92,12 @@ class Task
         return $this;
     }
 
-    public function getMember(): ?employee
+    public function getMember(): ?employe
     {
         return $this->member;
     }
 
-    public function setMember(?employee $member): static
+    public function setMember(?employe $member): static
     {
         $this->member = $member;
 
