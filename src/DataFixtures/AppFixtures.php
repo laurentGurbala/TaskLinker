@@ -10,9 +10,17 @@ use App\Entity\Tache;
 use App\Entity\Statut;
 use \DateTime;
 use \DateInterval;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         // Création des statuts
@@ -36,6 +44,10 @@ class AppFixtures extends Fixture
             ->setEmail('natalie@driblet.com')
             ->setStatut('CDI')
             ->setDateArrivee(new DateTime('2019-06-14'));
+
+        $password = $this->passwordHasher->hashPassword($employe1, 'test123');
+        $employe1->setPassword($password);
+
         $manager->persist($employe1);
 
         $employe2 = new Employe();
@@ -44,6 +56,10 @@ class AppFixtures extends Fixture
             ->setEmail('demi@driblet.com')
             ->setStatut('CDD')
             ->setDateArrivee(new DateTime('2022-09-01'));
+
+        $password = $this->passwordHasher->hashPassword($employe2, 'test123');
+        $employe2->setPassword($password);
+        
         $manager->persist($employe2);
 
         $employe3 = new Employe();
@@ -52,6 +68,10 @@ class AppFixtures extends Fixture
             ->setEmail('marie@driblet.com')
             ->setStatut('Freelance')
             ->setDateArrivee(new DateTime('2021-12-20'));
+
+        $password = $this->passwordHasher->hashPassword($employe3, 'test123');
+        $employe3->setPassword($password);
+        
         $manager->persist($employe3);
 
         // Création des projets
