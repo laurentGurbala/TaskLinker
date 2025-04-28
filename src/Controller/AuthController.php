@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Employe;
+use App\Form\EmployeType;
+use App\Form\RegisterType;
+use App\Repository\EmployeRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
+
+class AuthController extends AbstractController
+{
+    public function __construct(
+        private EmployeRepository $employeRepository,
+        private EntityManagerInterface $entityManager,
+    ){ }
+
+    #[Route("/bienvenue", name: "app_bienvenue")]
+    public function bienvenue(): Response 
+    {
+        return $this->render("auth/bienvenue.html.twig");
+    }
+
+    #[Route('/inscription', name: 'app_register')]
+    public function register(Request $request, UserPasswordHasherInterface $hasher): Response
+    {
+        $employe = new Employe();
+        $employe->setStatut("CDI")
+        ->setDateArrivee(new \DateTime());
+
+        $form = $this->createForm(RegisterType::class, $employe);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $employe->setPassword($hasher->hashPassword($employe, $employe->getPassword()));
+
+            $this->entityManager->persist($employe);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute("app_projets");
+        }
+
+        return $this->render('auth/register.html.twig', [
+            'form' => $form,
+        ]);
+    }
+}
