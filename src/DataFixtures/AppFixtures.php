@@ -42,6 +42,7 @@ class AppFixtures extends Fixture
         $employe1->setNom('Dillon')
             ->setPrenom('Natalie')
             ->setEmail('natalie@driblet.com')
+            ->setRoles(['ROLE_ADMIN'])
             ->setStatut('CDI')
             ->setDateArrivee(new DateTime('2019-06-14'));
 
