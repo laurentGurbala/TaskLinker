@@ -27,9 +27,18 @@ class ProjetController extends AbstractController
     #[Route('/', name: 'app_projets')]
     public function projets(): Response
     {
-        $projets = $this->projetRepository->findBy([
-            'archive' => false,
-        ]);
+        /** @var Employe $user */
+        $user = $this->getUser();
+
+        if ($user->isAdmin()) {
+            $projets = $this->projetRepository->findBy([
+                'archive' => false,
+            ]);
+        } else {
+            $projets = $user->getProjets()->filter(function (Projet $projet) {
+                return !$projet->isArchive();
+            });
+        }
 
         return $this->render('projet/liste.html.twig', [
             'projets' => $projets,
