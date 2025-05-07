@@ -11,6 +11,7 @@ use App\Repository\StatutRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Projet;
 use App\Form\ProjetType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProjetController extends AbstractController
@@ -25,23 +26,17 @@ class ProjetController extends AbstractController
     }
 
     #[Route('/', name: 'app_projets')]
-    public function projets(): Response
+    public function projets(Security $security): Response
     {
-        /** @var Employe $user */
-        $user = $this->getUser();
+        $projets = $this->projetRepository->findBy(['archive' => false]);
 
-        if ($user->isAdmin()) {
-            $projets = $this->projetRepository->findBy([
-                'archive' => false,
-            ]);
-        } else {
-            $projets = $user->getProjets()->filter(function (Projet $projet) {
-                return !$projet->isArchive();
-            });
-        }
+        // Ne garder que les projets accessibles selon le Voter
+        $projetsVisibles = array_filter($projets, function (Projet $projet) use ($security) {
+            return $security->isGranted('acces_projet', $projet->getId());
+        });
 
         return $this->render('projet/liste.html.twig', [
-            'projets' => $projets,
+            'projets' => $projetsVisibles,
         ]);
     }
 
