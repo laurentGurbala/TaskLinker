@@ -73,5 +73,5 @@ symfony server:start
 - supprimer un membre à l'équipe
 
 ## Liens
-- [démo](https://laurent-gurbala.fr/TaskLinker)
+- [démo](https://laurent-gurbala.fr/TaskLinker/public)
 - [portfolio](https://laurent-gurbala.fr)
